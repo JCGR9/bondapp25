@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline, Box } from '@mui/material';
 import LoginPage from './pages/LoginPage';
@@ -33,11 +33,29 @@ const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentPage, setCurrentPage] = useState('dashboard');
 
+  // Verificar si hay sesión guardada al cargar
+  useEffect(() => {
+    const savedAuth = localStorage.getItem('bondapp_authenticated');
+    if (savedAuth === 'true') {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+    localStorage.setItem('bondapp_authenticated', 'true');
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('bondapp_authenticated');
+  };
+
   if (!isAuthenticated) {
     return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <LoginPage onLogin={() => setIsAuthenticated(true)} />
+        <LoginPage onLogin={handleLogin} />
       </ThemeProvider>
     );
   }
@@ -46,7 +64,7 @@ const App: React.FC = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box sx={{ display: 'flex' }}>
-        <Sidebar currentPage={currentPage} onNavigate={setCurrentPage} />
+        <Sidebar currentPage={currentPage} onNavigate={setCurrentPage} onLogout={handleLogout} />
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           {currentPage === 'dashboard' && <DashboardRealData />}
           {currentPage === 'instruments-manager' && <InstrumentsManagerPage />}

@@ -27,6 +27,7 @@ import bondadLogo from '../assets/bondad.png';
 interface SidebarProps {
   currentPage: string;
   onNavigate: (page: string) => void;
+  onLogout?: () => void;
 }
 
 const drawerWidth = 240;
@@ -45,7 +46,7 @@ const menuItems = [
   { id: 'management', label: 'Gestiones', icon: <WorkIcon /> },
 ];
 
-const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate }) => {
+const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onLogout }) => {
   return (
     <Drawer
       variant="permanent"
