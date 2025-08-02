@@ -36,14 +36,20 @@ const App: React.FC = () => {
   // Verificar si hay sesión guardada al cargar
   useEffect(() => {
     const savedAuth = localStorage.getItem('bondapp_authenticated');
+    console.log('🔍 Checking saved auth:', savedAuth);
     if (savedAuth === 'true') {
+      console.log('✅ Found saved auth, setting authenticated to true');
       setIsAuthenticated(true);
+    } else {
+      console.log('❌ No saved auth found');
     }
   }, []);
 
   const handleLogin = () => {
+    console.log('🔑 Handling login');
     setIsAuthenticated(true);
     localStorage.setItem('bondapp_authenticated', 'true');
+    console.log('✅ Login successful, saved to localStorage');
   };
 
   const handleLogout = () => {

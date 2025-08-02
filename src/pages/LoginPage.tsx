@@ -20,9 +20,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   const [error, setError] = useState('');
 
   const handleLogin = () => {
+    console.log('🔐 LoginPage: Attempting login with', username, password);
     if (username === 'admin' && password === 'admin') {
+      console.log('✅ LoginPage: Credentials valid, calling onLogin');
       onLogin();
     } else {
+      console.log('❌ LoginPage: Invalid credentials');
       setError('Usuario o contraseña incorrectos');
     }
   };
