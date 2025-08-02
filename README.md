@@ -1,10 +1,10 @@
 # 🎵 BondApp - Sistema de Gestión para Bandas de Música
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/tu-usuario/bondapp)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/JCGR9/bondad25)
 
 BondApp es una aplicación completa para la gestión integral de bandas de música, desarrollada con React, TypeScript y Firebase para almacenamiento en la nube.
 
-## 🚀 **ACCESO ONLINE**: [https://bondapp.vercel.app](https://bondapp.vercel.app)
+## 🚀 **ACCESO ONLINE**: [https://bondad25.vercel.app](https://bondad25.vercel.app)
 
 ## 🎵 Características Principales
 
