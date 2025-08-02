@@ -1,0 +1,110 @@
+[
+  {
+    "id": "act001",
+    "title": "Concierto de Navidad",
+    "date": "2025-12-15",
+    "meetingTime": "17:00",
+    "meetingPlace": "Plaza del Ayuntamiento",
+    "venue": "Teatro Principal",
+    "organizer": "Ayuntamiento de la Ciudad",
+    "expenses": [
+      {
+        "id": "exp001",
+        "name": "Transporte",
+        "amount": 200,
+        "description": "Combustible autobuses"
+      },
+      {
+        "id": "exp002", 
+        "name": "Refrigerio",
+        "amount": 150,
+        "description": "Cena para los músicos"
+      }
+    ],
+    "income": [
+      {
+        "id": "inc001",
+        "name": "Cachè actuación",
+        "amount": 1500,
+        "description": "Pago por la actuación"
+      }
+    ],
+    "transport": {
+      "buses": [
+        {
+          "id": "bus001",
+          "capacity": 55,
+          "type": "55 plazas",
+          "occupiedSeats": 45,
+          "passengers": []
+        }
+      ],
+      "privateCars": [
+        {
+          "id": "car001",
+          "owner": "Juan García",
+          "capacity": 4,
+          "passengers": []
+        }
+      ]
+    },
+    "attendance": {
+      "attending": [],
+      "notAttending": []
+    }
+  },
+  {
+    "id": "act002",
+    "title": "Procesión Semana Santa",
+    "date": "2026-04-05",
+    "meetingTime": "09:00",
+    "meetingPlace": "Iglesia de San Pedro",
+    "venue": "Centro Histórico",
+    "organizer": "Hermandad San Pedro",
+    "expenses": [
+      {
+        "id": "exp003",
+        "name": "Partituras",
+        "amount": 80,
+        "description": "Alquiler partituras procesionales"
+      }
+    ],
+    "income": [
+      {
+        "id": "inc002",
+        "name": "Donativo hermandad",
+        "amount": 800,
+        "description": "Donativo por participación"
+      }
+    ],
+    "transport": {
+      "buses": [
+        {
+          "id": "bus002",
+          "capacity": 70,
+          "type": "70 plazas",
+          "occupiedSeats": 38,
+          "passengers": []
+        }
+      ],
+      "privateCars": [
+        {
+          "id": "car002",
+          "owner": "María López",
+          "capacity": 5,
+          "passengers": []
+        },
+        {
+          "id": "car003",
+          "owner": "Carlos Ruiz",
+          "capacity": 4,
+          "passengers": []
+        }
+      ]
+    },
+    "attendance": {
+      "attending": [],
+      "notAttending": []
+    }
+  }
+]

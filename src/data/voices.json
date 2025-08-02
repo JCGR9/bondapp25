@@ -1,0 +1,86 @@
+[
+  {
+    "id": "trompeta_1",
+    "name": "Trompeta 1º",
+    "instrumentId": "trompeta",
+    "description": "Primera voz de trompeta - melodía principal y solos"
+  },
+  {
+    "id": "trompeta_2",
+    "name": "Trompeta 2º",
+    "instrumentId": "trompeta",
+    "description": "Segunda voz de trompeta - armonías y acompañamiento"
+  },
+  {
+    "id": "trombon_1",
+    "name": "Trombón 1º",
+    "instrumentId": "trombon",
+    "description": "Primera voz de trombón - melodía y partes solistas"
+  },
+  {
+    "id": "trombon_2",
+    "name": "Trombón 2º",
+    "instrumentId": "trombon",
+    "description": "Segunda voz de trombón - armonías y bajo"
+  },
+  {
+    "id": "bombardino",
+    "name": "Bombardino",
+    "instrumentId": "bombardino",
+    "description": "Voz de bombardino - registro tenor"
+  },
+  {
+    "id": "tuba",
+    "name": "Tuba",
+    "instrumentId": "tuba",
+    "description": "Voz de tuba - registro grave y bajo"
+  },
+  {
+    "id": "corneta",
+    "name": "Corneta",
+    "instrumentId": "corneta",
+    "description": "Voz de corneta - registro agudo"
+  },
+  {
+    "id": "lira",
+    "name": "Lira",
+    "instrumentId": "lira",
+    "description": "Voz de lira - melodías y adornos"
+  },
+  {
+    "id": "caja",
+    "name": "Caja",
+    "instrumentId": "caja",
+    "description": "Voz de caja - ritmo y redobles"
+  },
+  {
+    "id": "bombo",
+    "name": "Bombo",
+    "instrumentId": "bombo",
+    "description": "Voz de bombo - base rítmica"
+  },
+  {
+    "id": "platillos",
+    "name": "Platillos",
+    "instrumentId": "platillos",
+    "description": "Voz de platillos - acentos y efectos"
+  },
+  {
+    "id": "tambor",
+    "name": "Tambor",
+    "instrumentId": "tambor",
+    "description": "Voz de tambor - ritmo complementario"
+  },
+  {
+    "id": "campanas",
+    "name": "Campanas",
+    "instrumentId": "campanas",
+    "description": "Voz de campanas - melodías especiales"
+  },
+  {
+    "id": "bandera",
+    "name": "Bandera",
+    "instrumentId": "bandera",
+    "description": "Auxiliar bandera - ceremonial y visual"
+  }
+]

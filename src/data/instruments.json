@@ -1,0 +1,62 @@
+[
+  {
+    "id": "trompeta",
+    "name": "Trompeta",
+    "description": "Instrumento de viento metal agudo"
+  },
+  {
+    "id": "trombon",
+    "name": "Trombón",
+    "description": "Instrumento de viento metal con vara"
+  },
+  {
+    "id": "bombardino",
+    "name": "Bombardino",
+    "description": "Instrumento de viento metal tenor"
+  },
+  {
+    "id": "tuba",
+    "name": "Tuba",
+    "description": "Instrumento de viento metal grave"
+  },
+  {
+    "id": "corneta",
+    "name": "Corneta",
+    "description": "Instrumento de viento metal pequeño"
+  },
+  {
+    "id": "lira",
+    "name": "Lira",
+    "description": "Instrumento melódico de percusión"
+  },
+  {
+    "id": "caja",
+    "name": "Caja",
+    "description": "Tambor pequeño de percusión"
+  },
+  {
+    "id": "bombo",
+    "name": "Bombo",
+    "description": "Tambor grande de percusión"
+  },
+  {
+    "id": "platillos",
+    "name": "Platillos",
+    "description": "Discos metálicos de percusión"
+  },
+  {
+    "id": "tambor",
+    "name": "Tambor",
+    "description": "Tambor mediano de percusión"
+  },
+  {
+    "id": "campanas",
+    "name": "Campanas",
+    "description": "Campanas tubulares o de concierto"
+  },
+  {
+    "id": "bandera",
+    "name": "Bandera",
+    "description": "Bandera ceremonial"
+  }
+]

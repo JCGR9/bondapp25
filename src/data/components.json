@@ -1,0 +1,292 @@
+[
+  {
+    "id": "comp_001",
+    "name": "Antonio",
+    "surname": "García López",
+    "dni": "12345678A",
+    "phone": "666123456",
+    "email": "antonio.garcia@email.com",
+    "address": "Calle Mayor, 15, 1º A",
+    "voice": "trompeta_1",
+    "instrument": null,
+    "uniform": null,
+    "isMinor": false,
+    "tutorName": "",
+    "stars": 3,
+    "joinDate": "2015-09-01",
+    "photo": null,
+    "attendedPerformances": [],
+    "missedPerformances": [],
+    "assignedUniforms": {
+      "gala": ["chaqueta_gala", "pantalon_gala", "cinturon_gala"],
+      "beduino": ["panuelo", "cinta_cabeza"]
+    },
+    "performanceStats": {
+      "totalPerformances": 0,
+      "attended": 0,
+      "missed": 0,
+      "attendanceRate": 0
+    }
+  },
+  {
+    "id": "comp_002",
+    "name": "María",
+    "surname": "Rodríguez Fernández",
+    "dni": "87654321B",
+    "phone": "655987654",
+    "email": "maria.rodriguez@email.com",
+    "address": "Avenida de la Música, 23, 2º B",
+    "voice": "lira",
+    "instrument": null,
+    "uniform": null,
+    "isMinor": false,
+    "tutorName": "",
+    "stars": 2,
+    "joinDate": "2018-03-15",
+    "photo": null,
+    "attendedPerformances": [],
+    "missedPerformances": [],
+    "assignedUniforms": {
+      "gala": ["chaqueta_gala", "pantalon_gala", "cinturon_gala", "zapatos_charol", "camisa"],
+      "beduino": ["panuelo", "cinta_cabeza", "cinturon_rojo", "tunica_beduino"]
+    },
+    "performanceStats": {
+      "totalPerformances": 0,
+      "attended": 0,
+      "missed": 0,
+      "attendanceRate": 0
+    }
+  },
+  {
+    "id": "comp_003",
+    "name": "Carlos",
+    "surname": "Martín Jiménez",
+    "dni": "45678912C",
+    "phone": "677456789",
+    "email": "carlos.martin@email.com",
+    "address": "Plaza del Pueblo, 8",
+    "voice": "tuba",
+    "instrument": null,
+    "uniform": null,
+    "isMinor": false,
+    "tutorName": "",
+    "stars": 1,
+    "joinDate": "2020-11-20",
+    "photo": null,
+    "attendedPerformances": [],
+    "missedPerformances": [],
+    "assignedUniforms": {
+      "gala": ["chaqueta_gala", "pantalon_gala"],
+      "beduino": ["panuelo"]
+    },
+    "performanceStats": {
+      "totalPerformances": 0,
+      "attended": 0,
+      "missed": 0,
+      "attendanceRate": 0
+    }
+  },
+  {
+    "id": "comp_004",
+    "name": "Elena",
+    "surname": "González Ruiz",
+    "dni": "78912345D",
+    "phone": "644321987",
+    "email": "elena.gonzalez@email.com",
+    "address": "Calle de la Banda, 12, 3º C",
+    "voice": "trompeta_2",
+    "instrument": null,
+    "uniform": null,
+    "isMinor": true,
+    "tutorName": "José González Pérez",
+    "stars": 0,
+    "joinDate": "2023-09-10",
+    "photo": null,
+    "attendedPerformances": [],
+    "missedPerformances": [],
+    "assignedUniforms": {
+      "gala": ["camisa"],
+      "beduino": ["panuelo", "cinta_cabeza"]
+    },
+    "performanceStats": {
+      "totalPerformances": 0,
+      "attended": 0,
+      "missed": 0,
+      "attendanceRate": 0
+    }
+  },
+  {
+    "id": "comp_005",
+    "name": "David",
+    "surname": "López Sánchez",
+    "dni": "32165498E",
+    "phone": "689741258",
+    "email": "david.lopez@email.com",
+    "address": "Calle Nueva, 45, 1º",
+    "voice": "caja",
+    "instrument": null,
+    "uniform": null,
+    "isMinor": false,
+    "tutorName": "",
+    "stars": 4,
+    "joinDate": "2008-05-12",
+    "photo": null,
+    "attendedPerformances": [],
+    "missedPerformances": [],
+    "assignedUniforms": {
+      "gala": ["chaqueta_gala", "pantalon_gala", "cinturon_gala", "zapatos_charol", "camisa", "gorro", "pluma"],
+      "beduino": ["panuelo", "cinta_cabeza", "cinturon_rojo", "tunica_beduino"]
+    },
+    "performanceStats": {
+      "totalPerformances": 0,
+      "attended": 0,
+      "missed": 0,
+      "attendanceRate": 0
+    }
+  },
+  {
+    "id": "comp_006",
+    "name": "Laura",
+    "surname": "Sánchez Moreno",
+    "dni": "98765432F",
+    "phone": "612345678",
+    "email": "laura.sanchez@email.com",
+    "address": "Calle del Arte, 34, 2º",
+    "voice": "bombardino",
+    "instrument": null,
+    "uniform": null,
+    "isMinor": false,
+    "tutorName": "",
+    "stars": 2,
+    "joinDate": "2017-06-20",
+    "photo": null,
+    "attendedPerformances": [],
+    "missedPerformances": [],
+    "assignedUniforms": {
+      "gala": ["chaqueta_gala", "pantalon_gala", "cinturon_gala"],
+      "beduino": ["tunica_beduino"]
+    },
+    "performanceStats": {
+      "totalPerformances": 0,
+      "attended": 0,
+      "missed": 0,
+      "attendanceRate": 0
+    }
+  },
+  {
+    "id": "comp_007",
+    "name": "José",
+    "surname": "Fernández Torres",
+    "dni": "15975348G",
+    "phone": "654789123",
+    "email": "jose.fernandez@email.com",
+    "address": "Plaza de la Música, 7",
+    "voice": "trombon_1",
+    "instrument": null,
+    "uniform": null,
+    "isMinor": false,
+    "tutorName": "",
+    "stars": 5,
+    "joinDate": "2000-04-15",
+    "photo": null,
+    "attendedPerformances": [],
+    "missedPerformances": [],
+    "assignedUniforms": {
+      "gala": ["chaqueta_gala", "pantalon_gala", "cinturon_gala", "zapatos_charol", "camisa", "gorro", "pluma"],
+      "beduino": ["panuelo", "cinta_cabeza", "cinturon_rojo", "tunica_beduino"]
+    },
+    "performanceStats": {
+      "totalPerformances": 0,
+      "attended": 0,
+      "missed": 0,
+      "attendanceRate": 0
+    }
+  },
+  {
+    "id": "comp_008",
+    "name": "Ana",
+    "surname": "Ruiz Jiménez",
+    "dni": "75395148H",
+    "phone": "698765432",
+    "email": "ana.ruiz@email.com",
+    "address": "Avenida Central, 89, 4º A",
+    "voice": "corneta",
+    "instrument": null,
+    "uniform": null,
+    "isMinor": true,
+    "tutorName": "Miguel Ruiz López",
+    "stars": 0,
+    "joinDate": "2024-01-10",
+    "photo": null,
+    "attendedPerformances": [],
+    "missedPerformances": [],
+    "assignedUniforms": {
+      "gala": [],
+      "beduino": []
+    },
+    "performanceStats": {
+      "totalPerformances": 0,
+      "attended": 0,
+      "missed": 0,
+      "attendanceRate": 0
+    }
+  },
+  {
+    "id": "comp_009",
+    "name": "Francisco",
+    "surname": "Morales Vázquez",
+    "dni": "85296374I",
+    "phone": "667894561",
+    "email": "francisco.morales@email.com",
+    "address": "Calle Harmony, 56, 1º B",
+    "voice": "bombo",
+    "instrument": null,
+    "uniform": null,
+    "isMinor": false,
+    "tutorName": "",
+    "stars": 3,
+    "joinDate": "2014-11-03",
+    "photo": null,
+    "attendedPerformances": [],
+    "missedPerformances": [],
+    "assignedUniforms": {
+      "gala": ["chaqueta_gala", "pantalon_gala", "cinturon_gala", "zapatos_charol"],
+      "beduino": ["panuelo", "cinturon_rojo"]
+    },
+    "performanceStats": {
+      "totalPerformances": 0,
+      "attended": 0,
+      "missed": 0,
+      "attendanceRate": 0
+    }
+  },
+  {
+    "id": "comp_010",
+    "name": "Patricia",
+    "surname": "Herrera Castro",
+    "dni": "36974185J",
+    "phone": "623456789",
+    "email": "patricia.herrera@email.com",
+    "address": "Plaza del Compás, 12, 3º",
+    "voice": "bandera",
+    "instrument": null,
+    "uniform": null,
+    "isMinor": false,
+    "tutorName": "",
+    "stars": 1,
+    "joinDate": "2019-09-15",
+    "photo": null,
+    "attendedPerformances": [],
+    "missedPerformances": [],
+    "assignedUniforms": {
+      "gala": ["chaqueta_gala"],
+      "beduino": ["panuelo"]
+    },
+    "performanceStats": {
+      "totalPerformances": 0,
+      "attended": 0,
+      "missed": 0,
+      "attendanceRate": 0
+    }
+  }
+]

@@ -1,0 +1,72 @@
+[
+  {
+    "id": "chaqueta_gala",
+    "name": "Chaqueta Gala",
+    "type": "gala",
+    "category": "superior",
+    "description": "Chaqueta ceremonial para actuaciones formales",
+    "color": "Azul marino con bordados dorados",
+    "material": "Lana de alta calidad",
+    "required": true
+  },
+  {
+    "id": "pantalon_gala",
+    "name": "Pantalón Gala", 
+    "type": "gala",
+    "category": "inferior",
+    "description": "Pantalón ceremonial con raya dorada",
+    "color": "Azul marino con raya dorada",
+    "material": "Lana de alta calidad",
+    "required": true
+  },
+  {
+    "id": "cinturon_gala",
+    "name": "Cinturón Gala",
+    "type": "gala", 
+    "category": "complemento",
+    "description": "Cinturón ceremonial con hebilla dorada",
+    "color": "Negro con hebilla dorada",
+    "material": "Cuero",
+    "required": true
+  },
+  {
+    "id": "zapatos_charol",
+    "name": "Zapatos de charol",
+    "type": "gala",
+    "category": "calzado",
+    "description": "Zapatos negros de charol ceremoniales",
+    "color": "Negro charol",
+    "material": "Cuero",
+    "required": true
+  },
+  {
+    "id": "camisa",
+    "name": "Camisa",
+    "type": "gala",
+    "category": "interior",
+    "description": "Camisa blanca formal",
+    "color": "Blanco",
+    "material": "Algodón",
+    "required": true
+  },
+  {
+    "id": "gorro",
+    "name": "Gorro",
+    "type": "gala",
+    "category": "cabeza",
+    "description": "Gorro ceremonial de la banda",
+    "color": "Azul marino",
+    "material": "Fieltro",
+    "required": true
+  },
+  {
+    "id": "pluma",
+    "name": "Pluma",
+    "type": "gala",
+    "category": "complemento",
+    "description": "Pluma decorativa para el gorro",
+    "color": "Blanca",
+    "material": "Pluma natural",
+    "required": true
+  }
+]

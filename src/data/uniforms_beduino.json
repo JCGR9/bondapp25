@@ -1,0 +1,42 @@
+[
+  {
+    "id": "panuelo",
+    "name": "Pañuelo",
+    "type": "beduino",
+    "category": "cabeza",
+    "description": "Pañuelo tradicional beduino",
+    "color": "Blanco o beige",
+    "material": "Algodón ligero",
+    "required": true
+  },
+  {
+    "id": "cinta_cabeza",
+    "name": "Cinta cabeza",
+    "type": "beduino",
+    "category": "complemento", 
+    "description": "Cinta tradicional para sujetar el pañuelo",
+    "color": "Dorado o negro",
+    "material": "Cordón trenzado",
+    "required": true
+  },
+  {
+    "id": "cinturon_rojo",
+    "name": "Cinturón rojo",
+    "type": "beduino",
+    "category": "complemento",
+    "description": "Cinturón tradicional beduino de color rojo",
+    "color": "Rojo",
+    "material": "Tela o cuero",
+    "required": true
+  },
+  {
+    "id": "tunica_beduino",
+    "name": "Túnica Beduino",
+    "type": "beduino",
+    "category": "superior",
+    "description": "Túnica tradicional beduina de manga larga",
+    "color": "Blanco o beige",
+    "material": "Algodón ligero",
+    "required": true
+  }
+]
