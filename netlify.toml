@@ -5,11 +5,11 @@
 
 [build]
   publish = "dist"
-  command = "NODE_OPTIONS='--max-old-space-size=4096' npm ci && npm run build"
+  command = "npm run build:netlify"
 
 [build.environment]
   NODE_VERSION = "20"
-  NPM_FLAGS = "--legacy-peer-deps"
+  FORCE_INSTALL = "true"
 
 [[headers]]
   for = "/*"
