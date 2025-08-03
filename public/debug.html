@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BondApp Debug</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background: #f5f5f5;
+        }
+        .debug-info {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .success { color: #4caf50; }
+        .error { color: #f44336; }
+    </style>
+</head>
+<body>
+    <div class="debug-info">
+        <h1>🔍 BondApp Debug</h1>
+        <p class="success">✅ HTML se carga correctamente</p>
+        <p class="success">✅ CSS se aplica correctamente</p>
+        <p id="js-status" class="error">❌ JavaScript no cargado</p>
+    </div>
+
+    <script>
+        document.getElementById('js-status').innerHTML = '✅ JavaScript cargado correctamente';
+        document.getElementById('js-status').className = 'success';
+        
+        console.log('🚀 Debug info:');
+        console.log('URL actual:', window.location.href);
+        console.log('User Agent:', navigator.userAgent);
+        console.log('Tamaño ventana:', window.innerWidth + 'x' + window.innerHeight);
+        
+        // Verificar que React puede cargar
+        if (typeof React !== 'undefined') {
+            console.log('✅ React disponible');
+        } else {
+            console.log('❌ React no disponible');
+        }
+    </script>
+</body>
+</html>
