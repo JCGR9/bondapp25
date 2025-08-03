@@ -164,21 +164,10 @@ const App: React.FC = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  // Mostrar error si faltan variables de entorno críticas
-  if (!envValidation.isValid && ENV.isProduction) {
-    return (
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Box sx={{ p: 3 }}>
-          <Alert severity="error">
-            <AlertTitle>Error de Configuración</AlertTitle>
-            Faltan variables de entorno requeridas: {envValidation.missingVars.join(', ')}
-            <br />
-            Por favor, configura estas variables en el dashboard de Vercel.
-          </Alert>
-        </Box>
-      </ThemeProvider>
-    );
+  // Mostrar aviso si faltan variables de entorno (solo en desarrollo)
+  if (!envValidation.isValid && !ENV.isProduction) {
+    console.warn('Variables de entorno faltantes:', envValidation.missingVars);
+    // En producción (Netlify) continuamos sin mostrar error
   }
 
   if (!isAuthenticated) {
