@@ -34,3 +34,7 @@ out/
 # Electron
 electron/dist/
 electron/node_modules/
+
+# Google Drive Credentials
+credentials.json
+token.json

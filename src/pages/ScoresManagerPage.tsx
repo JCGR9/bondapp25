@@ -43,13 +43,15 @@ import {
   CloudUpload as CloudUploadIcon,
   GetApp as GetAppIcon
 } from '@mui/icons-material';
-import { ref, deleteObject } from 'firebase/storage';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
-import { storage, db } from '../config/firebase';
+import { db } from '../config/firebase';
 
 // Importar los datos de componentes
 import voicesData from '../data/voices.json';
 import instrumentsData from '../data/instruments.json';
+import { driveService } from '../services/googleDriveService';
+import { driveFolderManager } from '../services/googleDriveFolderManager';
+import { googleAuthService } from '../services/googleAuthService';
 
 // Interfaces
 interface Score {
@@ -64,7 +66,8 @@ interface Score {
   description?: string;
   tags: string[];
   fileName: string;
-  fileUrl: string;
+  driveFileId: string;
+  downloadUrl?: string;
   fileSize: number;
   uploadDate: Date;
   lastModified: Date;
@@ -172,22 +175,37 @@ const ScoresManagerPage: React.FC = () => {
   const loadScores = async () => {
     try {
       setLoading(true);
+      console.log('🔄 Cargando partituras...');
       
       // Load from localStorage first (development mode)
       const savedScores = localStorage.getItem('bondapp_scores');
       if (savedScores) {
-        const parsedScores = JSON.parse(savedScores).map((score: any) => ({
-          ...score,
-          uploadDate: new Date(score.uploadDate),
-          lastModified: new Date(score.lastModified)
-        }));
-        setScores(parsedScores);
-        console.log('Loaded scores from localStorage:', parsedScores.length);
-        return;
+        try {
+          const parsedScores = JSON.parse(savedScores);
+          // Validar que sea un array
+          if (Array.isArray(parsedScores)) {
+            const processedScores = parsedScores.map((score: any) => ({
+              ...score,
+              uploadDate: new Date(score.uploadDate),
+              lastModified: new Date(score.lastModified)
+            }));
+            setScores(processedScores);
+            console.log('✅ Partituras cargadas desde localStorage:', processedScores.length);
+            return;
+          } else {
+            console.warn('⚠️ Datos de partituras no válidos, limpiando localStorage');
+            localStorage.removeItem('bondapp_scores');
+          }
+        } catch (parseError) {
+          console.error('❌ Error al parsear partituras de localStorage:', parseError);
+          console.log('🧹 Limpiando localStorage corrupto...');
+          localStorage.removeItem('bondapp_scores');
+        }
       }
 
       // Fallback to Firebase (if properly configured)
       try {
+        console.log('🔄 Intentando cargar desde Firebase...');
         const scoresRef = collection(db, 'scores');
         const snapshot = await getDocs(scoresRef);
         const scoresData = snapshot.docs.map(doc => ({
@@ -197,41 +215,60 @@ const ScoresManagerPage: React.FC = () => {
           lastModified: doc.data().lastModified?.toDate() || new Date()
         })) as Score[];
         setScores(scoresData);
-        console.log('Loaded scores from Firebase:', scoresData.length);
+        console.log('✅ Partituras cargadas desde Firebase:', scoresData.length);
       } catch (firebaseError) {
-        console.warn('Firebase not available, no scores loaded:', firebaseError);
+        console.warn('⚠️ Firebase no disponible, inicializando array vacío:', firebaseError);
         setScores([]);
       }
     } catch (error) {
-      console.error('Error loading scores:', error);
+      console.error('❌ Error general al cargar partituras:', error);
       setScores([]);
     } finally {
       setLoading(false);
+      console.log('✅ Carga de partituras completada');
     }
   };
 
   const loadMarches = () => {
     try {
+      console.log('🔄 Cargando marchas...');
       const savedMarches = localStorage.getItem('bondapp_marches');
       if (savedMarches) {
-        setMarches(JSON.parse(savedMarches));
+        const parsedMarches = JSON.parse(savedMarches);
+        if (Array.isArray(parsedMarches)) {
+          setMarches(parsedMarches);
+          console.log('✅ Marchas cargadas:', parsedMarches.length);
+        } else {
+          console.warn('⚠️ Datos de marchas no válidos, inicializando array vacío');
+          setMarches([]);
+        }
+      } else {
+        console.log('📋 No hay marchas guardadas, inicializando array vacío');
+        setMarches([]);
       }
     } catch (error) {
-      console.error('Error loading marches:', error);
+      console.error('❌ Error al cargar marchas:', error);
+      localStorage.removeItem('bondapp_marches');
+      setMarches([]);
     }
   };
 
   const loadInstrumentsAndVoices = () => {
     try {
+      console.log('🔄 Cargando instrumentos y voces...');
       // Cargar instrumentos desde el JSON
       const instrumentsList = instrumentsData as Instrument[];
       setInstruments(instrumentsList);
+      console.log('✅ Instrumentos cargados:', instrumentsList.length);
 
       // Cargar voces desde el JSON
       const voicesList = voicesData as Voice[];
       setVoices(voicesList);
+      console.log('✅ Voces cargadas:', voicesList.length);
     } catch (error) {
-      console.error('Error loading instruments and voices:', error);
+      console.error('❌ Error al cargar instrumentos y voces:', error);
+      setInstruments([]);
+      setVoices([]);
     }
   };
 
@@ -423,8 +460,41 @@ const ScoresManagerPage: React.FC = () => {
 
     try {
       setLoading(true);
+      console.log(`📁 Iniciando subida de partitura: ${uploadFormData.file.name}`);
 
-      // Create score document (localStorage mode)
+      let driveFileId = `temp_${Date.now()}`;
+      let downloadUrl = URL.createObjectURL(uploadFormData.file);
+      
+      // Verificar si Google Drive está disponible
+      console.log('🔍 Verificando estado de Google Drive...');
+      const isGoogleDriveReady = googleAuthService.isReady();
+      console.log(`📊 Google Drive ready: ${isGoogleDriveReady}`);
+
+      if (!isGoogleDriveReady) {
+        console.log('⚠️ Google Drive no está listo, usando almacenamiento temporal');
+        // TODO: Agregar notificación informativa
+      } else {
+        try {
+          console.log('🚀 Subiendo a Google Drive...');
+          
+          // Crear carpeta de partituras si no existe
+          const scoresFolder = await driveFolderManager.ensureSubfolder('BondApp_Partituras');
+          
+          // Subir archivo a Google Drive
+          const driveFile = await driveService.uploadFile(uploadFormData.file, scoresFolder);
+          
+          driveFileId = driveFile.id;
+          downloadUrl = driveFile.webContentLink || driveService.getDirectDownloadUrl(driveFile.id);
+          
+          console.log(`✅ Partitura ${uploadFormData.file.name} subida a Google Drive correctamente`);
+          // TODO: Agregar notificación de éxito
+          
+        } catch (driveError) {
+          console.warn('⚠️ Google Drive no disponible, usando almacenamiento temporal:', driveError);
+          // TODO: Agregar notificación de warning
+        }
+      }
+
       const scoreData: Omit<Score, 'id'> = {
         title: uploadFormData.title,
         march: uploadFormData.march,
@@ -436,7 +506,8 @@ const ScoresManagerPage: React.FC = () => {
         description: uploadFormData.description,
         tags: uploadFormData.tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0),
         fileName: uploadFormData.file.name,
-        fileUrl: URL.createObjectURL(uploadFormData.file), // Create local URL for development
+        driveFileId: driveFileId,
+        downloadUrl: downloadUrl,
         fileSize: uploadFormData.file.size,
         uploadDate: new Date(),
         lastModified: new Date()
@@ -467,7 +538,7 @@ const ScoresManagerPage: React.FC = () => {
       });
 
       setOpenUploadDialog(false);
-      console.log('Partitura subida exitosamente:', newScore.title);
+      console.log('Partitura cargada temporalmente:', newScore.title, '(Sin Google Drive)');
     } catch (error) {
       console.error('Error uploading file:', error);
     } finally {
@@ -485,11 +556,13 @@ const ScoresManagerPage: React.FC = () => {
           // Try to delete from Firebase
           await deleteDoc(doc(db, 'scores', scoreId));
           
-          // Delete file from Storage
-          const storageRef = ref(storage, `scores/${score.march}/${score.instrument}/${score.voice}/${score.fileName}`);
-          await deleteObject(storageRef);
-        } catch (firebaseError) {
-          console.warn('Firebase deletion failed, continuing with local deletion:', firebaseError);
+          // TEMPORALMENTE: Comentar eliminación de Google Drive
+          // if (score.driveFileId) {
+          //   const driveService = new GoogleDriveService();
+          //   await driveService.deleteFile(score.driveFileId);
+          // }
+        } catch (error) {
+          console.warn('Cloud deletion failed, continuing with local deletion:', error);
         }
 
         // Update local state
@@ -504,14 +577,20 @@ const ScoresManagerPage: React.FC = () => {
     }
   };
 
-  const handleDownloadScore = (score: Score) => {
-    const link = document.createElement('a');
-    link.href = score.fileUrl;
-    link.download = score.fileName;
-    link.target = '_blank';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleDownloadScore = async (score: Score) => {
+    try {
+      // TEMPORALMENTE: Usar la URL de descarga directa
+      const link = document.createElement('a');
+      link.href = score.downloadUrl || '#';
+      link.download = score.fileName;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error al descargar partitura:', error);
+      // Mostrar error al usuario
+    }
   };
 
   const handleSendEmail = () => {
@@ -583,6 +662,15 @@ const ScoresManagerPage: React.FC = () => {
           </Fab>
         </Box>
       </Box>
+
+      {/* Loading Indicator */}
+      {loading && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+          <Typography variant="h6" sx={{ color: '#8B0000' }}>
+            🔄 Cargando partituras...
+          </Typography>
+        </Box>
+      )}
 
       {/* Stats Cards */}
       <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>

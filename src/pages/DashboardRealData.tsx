@@ -25,6 +25,13 @@ import {
   Event,
 } from '@mui/icons-material';
 
+import { initializeApp } from '../utils/autoSetup';
+import { SyncStatus } from '../components/SyncStatus';
+
+interface DashboardProps {
+  onNavigate?: (page: string) => void;
+}
+
 // Interfaces para los datos reales
 interface Performance {
   id: string;
@@ -101,7 +108,7 @@ interface KPIData {
   color: string;
 }
 
-const DashboardRealData: React.FC = () => {
+const DashboardRealData: React.FC<DashboardProps> = ({ onNavigate }) => {
   const [performances, setPerformances] = useState<Performance[]>([]);
   const [components, setComponents] = useState<ComponentMember[]>([]);
   const [contracts, setContracts] = useState<Contract[]>([]);
@@ -372,6 +379,9 @@ const DashboardRealData: React.FC = () => {
       <Typography variant="h4" gutterBottom sx={{ mb: 4, fontWeight: 'bold' }}>
         📊 Dashboard - Estadísticas Reales BondApp
       </Typography>
+
+      {/* Estado de Sincronización */}
+      <SyncStatus />
 
       {/* KPIs principales */}
       <Box sx={{ mb: 4 }}>

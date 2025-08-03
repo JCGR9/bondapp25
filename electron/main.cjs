@@ -13,18 +13,31 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
       enableRemoteModule: false,
+      webSecurity: false, // Añadido para desarrollo
     },
     icon: path.join(__dirname, 'assets/icon.png'), // Opcional: añadir icono
     titleBarStyle: 'default',
-    show: false, // No mostrar hasta que esté listo
+    show: true, // Cambiar a true para mostrar inmediatamente
   });
 
-  // Cargar la aplicación
-  const startUrl = isDev 
-    ? 'http://localhost:5175' 
-    : `file://${path.join(__dirname, '../dist/index.html')}`;
+  // Cargar la aplicación - SIEMPRE desde el servidor local
+  const startUrl = 'http://localhost:5174';
+  
+  console.log('🚀 Loading URL:', startUrl);
   
   mainWindow.loadURL(startUrl);
+
+  // Añadir logs de debug
+  mainWindow.webContents.on('did-finish-load', () => {
+    console.log('✅ Page loaded successfully');
+  });
+
+  mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
+    console.log('❌ Failed to load:', errorCode, errorDescription);
+  });
+
+  // SIEMPRE abrir DevTools para debugging
+  mainWindow.webContents.openDevTools();
 
   // Mostrar cuando esté listo para prevenir flash visual
   mainWindow.once('ready-to-show', () => {
@@ -110,7 +123,7 @@ app.on('web-contents-created', (event, contents) => {
   
   contents.on('will-navigate', (navigationEvent, navigationUrl) => {
     const parsedUrl = new URL(navigationUrl);
-    if (parsedUrl.origin !== 'http://localhost:5175' && !navigationUrl.startsWith('file://')) {
+    if (parsedUrl.origin !== 'http://localhost:5174' && !navigationUrl.startsWith('file://')) {
       navigationEvent.preventDefault();
     }
   });

@@ -1,0 +1,171 @@
+/* Estilos específicos para móviles - BondApp */
+
+/* Mejorar experiencia táctil */
+@media (max-width: 768px) {
+  /* Ocultar scrollbars en móvil para un look más limpio */
+  ::-webkit-scrollbar {
+    width: 2px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: rgba(139, 0, 0, 0.3);
+    border-radius: 2px;
+  }
+
+  /* Mejorar áreas de toque */
+  .MuiButton-root {
+    min-height: 48px !important;
+    padding: 12px 16px !important;
+  }
+
+  .MuiIconButton-root {
+    min-width: 48px !important;
+    min-height: 48px !important;
+  }
+
+  .MuiListItem-root {
+    min-height: 56px !important;
+    padding: 8px 16px !important;
+  }
+
+  /* Tablas responsive */
+  .MuiTableContainer-root {
+    max-width: calc(100vw - 32px);
+    overflow-x: auto;
+  }
+
+  .MuiTable-root {
+    min-width: 300px;
+  }
+
+  .MuiTableCell-root {
+    padding: 4px 8px !important;
+    font-size: 0.75rem !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+  }
+
+  /* Cards más compactos */
+  .MuiCard-root {
+    margin: 4px 0 !important;
+    border-radius: 8px !important;
+  }
+
+  .MuiCardContent-root {
+    padding: 12px !important;
+  }
+
+  .MuiCardContent-root:last-child {
+    padding-bottom: 12px !important;
+  }
+
+  /* Diálogos a pantalla completa en móvil */
+  .MuiDialog-paper {
+    margin: 8px !important;
+    width: calc(100vw - 16px) !important;
+    max-width: none !important;
+    max-height: calc(100vh - 16px) !important;
+  }
+
+  /* Formularios más amigables */
+  .MuiTextField-root {
+    margin-bottom: 16px !important;
+  }
+
+  .MuiInputBase-input {
+    font-size: 16px !important; /* Evita zoom en iOS */
+  }
+
+  /* Mejorar contraste en móvil */
+  .MuiTypography-body2 {
+    color: rgba(255, 255, 255, 0.9) !important;
+  }
+
+  /* Espaciado para el AppBar móvil */
+  .mobile-content {
+    padding-top: 64px !important;
+  }
+
+  /* Ocultar elementos no esenciales en móvil */
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+/* Estilos específicos para tablets */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .MuiContainer-root {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .MuiTableCell-root {
+    padding: 6px 8px !important;
+    font-size: 0.8rem !important;
+  }
+}
+
+/* Animaciones suaves para transiciones */
+.MuiDrawer-paper {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Mejoras para PWA */
+@media (display-mode: standalone) {
+  /* Estilos cuando se ejecuta como PWA */
+  body {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  /* Ocultar elementos del navegador */
+  .browser-only {
+    display: none !important;
+  }
+}
+
+/* Orientación landscape en móvil */
+@media (max-width: 768px) and (orientation: landscape) {
+  .MuiAppBar-root {
+    height: 48px !important;
+  }
+
+  .MuiToolbar-root {
+    min-height: 48px !important;
+  }
+
+  .mobile-content {
+    padding-top: 48px !important;
+  }
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dark mode nativo */
+@media (prefers-color-scheme: dark) {
+  meta[name="theme-color"] {
+    content: "#0A0A0A";
+  }
+}
+
+/* Optimización para pantallas de alta densidad */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .MuiAvatar-root img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}

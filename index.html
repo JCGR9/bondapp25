@@ -2,9 +2,33 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#8B0000" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="BondApp" />
     <title>BondApp - Sistema de Gestión Musical</title>
     <link rel="icon" href="/favicon.ico" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/bondad.png" />
+    
+    <!-- Prevenir zoom accidental en inputs en iOS -->
+    <style>
+        input[type="text"], input[type="email"], input[type="password"], input[type="number"], textarea, select {
+            font-size: 16px !important;
+        }
+        
+        /* Mejorar el scroll en móviles */
+        * {
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Evitar el bounce scroll en iOS */
+        body {
+            overscroll-behavior: none;
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
 </head>
 <body>
     <div id="root"></div>

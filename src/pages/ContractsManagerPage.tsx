@@ -1,45 +1,60 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Box,
-  Paper,
+  Container,
   Typography,
   Button,
+  Box,
+  Card,
+  CardContent,
+  CardActions,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   TextField,
-  Avatar,
-  Chip,
-  InputAdornment,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+  Fab,
+  MenuItem,
+  Select,
   FormControl,
   InputLabel,
-  Select,
-  MenuItem,
-  IconButton,
-  Collapse,
-  Card,
-  CardContent,
-  CardActions,
+  Chip,
+  Snackbar,
   Alert,
+  CircularProgress,
+  Stack,
+  InputAdornment,
+  Collapse,
+  Avatar
 } from '@mui/material';
 import {
   Add as AddIcon,
-  Search as SearchIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
+  CloudUpload as CloudIcon,
+  CheckCircle as CheckIcon,
+  Search as SearchIcon,
+  Business as BusinessIcon,
+  LocationOn as LocationIcon,
+  DateRange as DateRangeIcon,
+  Euro as EuroIcon,
+  ExpandLess as ExpandLessIcon,
+  ExpandMore as ExpandMoreIcon,
+  Download as DownloadIcon,
   AttachFile as AttachFileIcon,
   PictureAsPdf as PdfIcon,
   Image as ImageIcon,
-  Description as DocumentIcon,
-  Download as DownloadIcon,
-  ExpandMore as ExpandMoreIcon,
-  ExpandLess as ExpandLessIcon,
-  DateRange as DateRangeIcon,
-  LocationOn as LocationIcon,
-  Business as BusinessIcon,
-  Euro as EuroIcon,
+  Description as DocumentIcon
 } from '@mui/icons-material';
+import { GoogleDriveService, googleAuthService, driveFolderManager, driveService } from '../services/googleDriveService';
+import { fileVerificationService } from '../services/fileVerificationService';
 
 // Interfaces
 interface ContractFile {
@@ -47,7 +62,8 @@ interface ContractFile {
   name: string;
   type: string;
   size: number;
-  dataUrl: string;
+  driveFileId: string;
+  downloadUrl?: string;
   uploadDate: string;
 }
 
@@ -71,6 +87,7 @@ interface Contract {
 const ContractsManagerPage: React.FC = () => {
   // Estados principales
   const [contracts, setContracts] = useState<Contract[]>([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -112,20 +129,35 @@ const ContractsManagerPage: React.FC = () => {
   };
 
   // Cargar contratos desde localStorage (incluyendo los sincronizados desde actuaciones)
-  const loadContracts = () => {
+  const loadContracts = async () => {
     try {
+      setLoading(true);
+      console.log('🔄 Cargando contratos...');
+      
       const savedContracts = localStorage.getItem('bondapp-contracts');
       if (savedContracts) {
         const contractsData = JSON.parse(savedContracts);
-        setContracts(contractsData);
-        console.log('Contratos cargados:', contractsData.length);
+        // Validar que sea un array
+        if (Array.isArray(contractsData)) {
+          setContracts(contractsData);
+          console.log('✅ Contratos cargados:', contractsData.length);
+        } else {
+          console.warn('⚠️ Datos de contratos no válidos, limpiando localStorage');
+          localStorage.removeItem('bondapp-contracts');
+          setContracts([]);
+        }
       } else {
+        console.log('📋 No hay contratos guardados, inicializando array vacío');
         setContracts([]);
       }
     } catch (error) {
-      console.error('Error al cargar contratos:', error);
-      showError('Error al cargar los contratos');
+      console.error('❌ Error al cargar contratos:', error);
+      console.log('🧹 Limpiando localStorage corrupto...');
+      localStorage.removeItem('bondapp-contracts');
+      showError('Error al cargar los contratos - datos reiniciados');
       setContracts([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -163,25 +195,46 @@ const ContractsManagerPage: React.FC = () => {
   };
 
   // Funciones para manejo de archivos
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files) return;
 
-    Array.from(files).forEach((file) => {
+    console.log(`📁 Iniciando subida de ${files.length} archivo(s)`);
+
+    for (const file of Array.from(files)) {
       if (file.size > 10 * 1024 * 1024) { // 10MB límite
         showError(`El archivo ${file.name} es demasiado grande (máximo 10MB)`);
-        return;
+        continue;
       }
 
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        if (e.target?.result) {
+      try {
+        console.log(`🔄 Procesando archivo: ${file.name} (${file.size} bytes)`);
+        
+        // Verificar si Google Drive está disponible
+        console.log('🔍 Verificando estado de Google Drive...');
+        const isGoogleDriveReady = googleAuthService.isReady();
+        console.log(`📊 Google Drive ready: ${isGoogleDriveReady}`);
+        
+        if (!isGoogleDriveReady) {
+          console.log('⚠️ Google Drive no está listo, saltando a respaldo');
+          throw new Error('Google Drive no está autorizado');
+        }
+        
+        // Intentar subir a Google Drive
+        try {
+          // Crear carpeta de contratos si no existe
+          const contractsFolder = await driveFolderManager.ensureSubfolder('BondApp_Contratos');
+          
+          // Subir archivo a Google Drive
+          const driveFile = await driveService.uploadFile(file, contractsFolder.id);
+          
           const newFile: ContractFile = {
             id: `file_${Date.now()}_${Math.random()}`,
             name: file.name,
             type: file.type,
             size: file.size,
-            dataUrl: e.target.result as string,
+            driveFileId: driveFile.id,
+            downloadUrl: driveFile.webContentLink || driveService.getDirectDownloadUrl(driveFile.id),
             uploadDate: new Date().toISOString(),
           };
 
@@ -189,10 +242,43 @@ const ContractsManagerPage: React.FC = () => {
             ...prev,
             files: [...prev.files, newFile]
           }));
+
+          console.log(`✅ Archivo ${file.name} subido a Google Drive correctamente`);
+          showSuccess(`Archivo ${file.name} subido correctamente a Google Drive`);
+          
+        } catch (driveError) {
+          console.warn('⚠️ Google Drive no disponible, usando almacenamiento temporal:', driveError);
+          
+          // Fallback: Convertir a Base64 como respaldo
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            if (e.target?.result) {
+              const newFile: ContractFile = {
+                id: `file_${Date.now()}_${Math.random()}`,
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                driveFileId: `temp_${Date.now()}`, // Temporal
+                downloadUrl: e.target.result as string, // Base64 temporal
+                uploadDate: new Date().toISOString(),
+              };
+
+              setContractForm(prev => ({
+                ...prev,
+                files: [...prev.files, newFile]
+              }));
+            }
+          };
+          reader.readAsDataURL(file);
+          
+          showError(`Google Drive no disponible. Archivo ${file.name} guardado temporalmente.`);
         }
-      };
-      reader.readAsDataURL(file);
-    });
+
+      } catch (error) {
+        console.error('❌ Error al cargar archivo:', error);
+        showError(`Error al cargar el archivo ${file.name}`);
+      }
+    }
 
     // Limpiar el input
     event.target.value = '';
@@ -205,13 +291,31 @@ const ContractsManagerPage: React.FC = () => {
     }));
   };
 
-  const handleDownloadFile = (file: ContractFile) => {
-    const link = document.createElement('a');
-    link.href = file.dataUrl;
-    link.download = file.name;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleDownloadFile = async (file: ContractFile) => {
+    try {
+      if (file.driveFileId.startsWith('temp_')) {
+        // Archivo temporal almacenado en Base64
+        const link = document.createElement('a');
+        link.href = file.downloadUrl || '#';
+        link.download = file.name;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        // Archivo en Google Drive
+        const downloadUrl = driveService.getDirectDownloadUrl(file.driveFileId);
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = file.name;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    } catch (error) {
+      console.error('Error al descargar archivo:', error);
+      showError(`Error al descargar el archivo ${file.name}`);
+    }
   };
 
   // Funciones CRUD
@@ -412,6 +516,15 @@ const ContractsManagerPage: React.FC = () => {
           Base de datos de documentos contractuales
         </Typography>
       </Box>
+
+      {/* Loading Indicator */}
+      {loading && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+          <Typography variant="h6" sx={{ color: '#8B0000' }}>
+            🔄 Cargando contratos...
+          </Typography>
+        </Box>
+      )}
 
       {/* Alertas */}
       {error && (

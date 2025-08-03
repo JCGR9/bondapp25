@@ -1,0 +1,28 @@
+{
+  "name": "BondApp - Sistema de Gestión Musical",
+  "short_name": "BondApp",
+  "description": "Sistema completo de gestión para bandas musicales",
+  "theme_color": "#8B0000",
+  "background_color": "#0A0A0A",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/bondad.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/bondad.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["music", "productivity", "business"],
+  "lang": "es",
+  "dir": "ltr"
+}
