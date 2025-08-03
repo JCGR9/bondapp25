@@ -26,7 +26,6 @@ import {
 } from '@mui/icons-material';
 
 import { initializeApp } from '../utils/autoSetup';
-import { SyncStatus } from '../components/SyncStatus';
 
 interface DashboardProps {
   onNavigate?: (page: string) => void;
@@ -379,9 +378,6 @@ const DashboardRealData: React.FC<DashboardProps> = ({ onNavigate }) => {
       <Typography variant="h4" gutterBottom sx={{ mb: 4, fontWeight: 'bold' }}>
         📊 Dashboard - Estadísticas Reales BondApp
       </Typography>
-
-      {/* Estado de Sincronización */}
-      <SyncStatus />
 
       {/* KPIs principales */}
       <Box sx={{ mb: 4 }}>

@@ -13,7 +13,6 @@ import {
   IconButton,
   useTheme,
   Button,
-  Divider,
 } from '@mui/material';
 import {
   Dashboard as DashboardIcon,
@@ -178,7 +177,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           <Button
             onClick={() => {
               onLogout();
-              if (isMobile) onMobileClose?.();
+              if (isMobile) onMobileClose();
             }}
             startIcon={<LogoutIcon />}
             fullWidth
