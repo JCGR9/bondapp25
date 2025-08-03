@@ -9,6 +9,8 @@ export default defineConfig(({ mode }) => ({
     global: 'globalThis',
   },
   build: {
+    target: 'esnext',
+    minify: 'esbuild',
     rollupOptions: {
       external: mode === 'development' ? [
         // Externalizar módulos de Node.js solo en desarrollo/Electron
