@@ -26,6 +26,7 @@ import {
 } from '@mui/icons-material';
 
 import { initializeApp } from '../utils/autoSetup';
+import { FirebaseSyncManager } from '../components/FirebaseSyncManager';
 
 interface DashboardProps {
   onNavigate?: (page: string) => void;
@@ -378,6 +379,9 @@ const DashboardRealData: React.FC<DashboardProps> = ({ onNavigate }) => {
       <Typography variant="h4" gutterBottom sx={{ mb: 4, fontWeight: 'bold' }}>
         📊 Dashboard - Estadísticas Reales BondApp
       </Typography>
+
+      {/* Sincronización Firebase */}
+      <FirebaseSyncManager />
 
       {/* KPIs principales */}
       <Box sx={{ mb: 4 }}>
