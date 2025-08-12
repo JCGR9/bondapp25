@@ -50,7 +50,6 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({ compact = false }) => {
       setSyncMessage('✅ Sincronización completada');
       setTimeout(() => {
         setShowMessage(false);
-        window.location.reload();
       }, 2000);
     } catch (error) {
       console.error('Error during sync:', error);

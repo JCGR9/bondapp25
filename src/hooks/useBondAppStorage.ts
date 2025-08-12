@@ -22,13 +22,12 @@ export function useBondAppStorage<T>(
   
   const { saveData, loadData, listenToChanges, stopListening } = useBondAppSync();
 
-  // Cargar datos iniciales
+  // Cargar datos iniciales SOLO desde Firebase
   useEffect(() => {
     const loadInitialData = async () => {
       try {
         setLoading(true);
         setError(null);
-        
         const savedData = await loadData(key);
         if (savedData !== null) {
           setData(savedData);
@@ -36,21 +35,10 @@ export function useBondAppStorage<T>(
       } catch (err) {
         console.error(`Error loading ${key}:`, err);
         setError(`Error cargando ${key}`);
-        
-        // Fallback a localStorage directo
-        try {
-          const localData = localStorage.getItem(key);
-          if (localData) {
-            setData(JSON.parse(localData));
-          }
-        } catch (localErr) {
-          console.error(`Error loading from localStorage for ${key}:`, localErr);
-        }
       } finally {
         setLoading(false);
       }
     };
-
     loadInitialData();
   }, [key, loadData]);
 
@@ -74,36 +62,16 @@ export function useBondAppStorage<T>(
   const updateData = useCallback(async (newData: T | ((prev: T) => T)) => {
     try {
       setError(null);
-      
       const finalData = typeof newData === 'function' 
         ? (newData as (prev: T) => T)(data)
         : newData;
-      
-      // Actualizar estado local inmediatamente
       setData(finalData);
-      
       if (options.autoSync) {
-        // Sincronizar con Firebase
         await saveData(key, finalData);
-      } else {
-        // Solo guardar localmente
-        localStorage.setItem(key, JSON.stringify(finalData));
       }
-      
     } catch (err) {
       console.error(`Error updating ${key}:`, err);
       setError(`Error guardando ${key}`);
-      
-      // Fallback a localStorage
-      try {
-        const finalData = typeof newData === 'function' 
-          ? (newData as (prev: T) => T)(data)
-          : newData;
-        localStorage.setItem(key, JSON.stringify(finalData));
-        setData(finalData);
-      } catch (localErr) {
-        console.error(`Error saving to localStorage for ${key}:`, localErr);
-      }
     }
   }, [data, key, options.autoSync, saveData]);
 
