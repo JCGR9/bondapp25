@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   Container,
   Typography,
@@ -25,9 +25,18 @@ import {
   Event,
 } from '@mui/icons-material';
 
-import { initializeApp } from '../utils/autoSetup';
+
 import { FirebaseSyncManager } from '../components/FirebaseSyncManager';
 import FirebaseTest from '../components/FirebaseTest';
+import {
+  useBondAppPerformances,
+  useBondAppComponents,
+  useBondAppContracts,
+  useBondAppFinances,
+  useBondAppInventory,
+  useBondAppTasks,
+  useBondAppScores
+} from '../hooks/useBondAppStorage';
 
 interface DashboardProps {
   onNavigate?: (page: string) => void;
@@ -109,72 +118,18 @@ interface KPIData {
   color: string;
 }
 
+
 const DashboardRealData: React.FC<DashboardProps> = ({ onNavigate }) => {
-  const [performances, setPerformances] = useState<Performance[]>([]);
-  const [components, setComponents] = useState<ComponentMember[]>([]);
-  const [contracts, setContracts] = useState<Contract[]>([]);
-  const [finances, setFinances] = useState<FinancialEntry[]>([]);
-  const [inventory, setInventory] = useState<InventoryItem[]>([]);
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [scores, setScores] = useState<Score[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  // Cargar datos reales de localStorage al inicializar
-  useEffect(() => {
-    loadAllData();
-  }, []);
+  const { data: performances, loading: loadingPerformances } = useBondAppPerformances() as { data: Performance[], loading: boolean };
+  const { data: components, loading: loadingComponents } = useBondAppComponents() as { data: ComponentMember[], loading: boolean };
+  const { data: contracts, loading: loadingContracts } = useBondAppContracts() as { data: Contract[], loading: boolean };
+  const { data: finances, loading: loadingFinances } = useBondAppFinances() as { data: FinancialEntry[], loading: boolean };
+  const { data: inventory, loading: loadingInventory } = useBondAppInventory() as { data: InventoryItem[], loading: boolean };
+  const { data: tasks, loading: loadingTasks } = useBondAppTasks() as { data: Task[], loading: boolean };
+  const { data: scores, loading: loadingScores } = useBondAppScores() as { data: Score[], loading: boolean };
 
-  const loadAllData = () => {
-    try {
-      // Cargar actuaciones
-      const savedPerformances = localStorage.getItem('bondapp-performances');
-      if (savedPerformances) {
-        setPerformances(JSON.parse(savedPerformances));
-      }
-
-      // Cargar componentes
-      const savedComponents = localStorage.getItem('bondapp-components');
-      if (savedComponents) {
-        setComponents(JSON.parse(savedComponents));
-      }
-
-      // Cargar contratos
-      const savedContracts = localStorage.getItem('bondapp-contracts');
-      if (savedContracts) {
-        setContracts(JSON.parse(savedContracts));
-      }
-
-      // Cargar finanzas
-      const savedFinances = localStorage.getItem('bondapp-finances');
-      if (savedFinances) {
-        const parsedFinances = JSON.parse(savedFinances);
-        setFinances(parsedFinances);
-      }
-
-      // Cargar inventario
-      const savedInventory = localStorage.getItem('bondapp-inventory');
-      if (savedInventory) {
-        setInventory(JSON.parse(savedInventory));
-      }
-
-      // Cargar tareas
-      const savedTasks = localStorage.getItem('bondapp-tasks');
-      if (savedTasks) {
-        setTasks(JSON.parse(savedTasks));
-      }
-
-      // Cargar partituras
-      const savedScores = localStorage.getItem('bondapp-scores');
-      if (savedScores) {
-        setScores(JSON.parse(savedScores));
-      }
-
-    } catch (error) {
-      console.error('Error al cargar datos:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const loading = loadingPerformances || loadingComponents || loadingContracts || loadingFinances || loadingInventory || loadingTasks || loadingScores;
 
   // Calcular estadísticas reales
   const getPerformancesByYear = () => {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useBondAppContracts } from '../hooks/useBondAppStorage';
 import {
   Container,
   Typography,
@@ -60,7 +61,7 @@ interface Contract {
 }
 
 const ContractsManagerPageSimple: React.FC = () => {
-  const [contracts, setContracts] = useState<Contract[]>([]);
+  // Eliminado: ahora se usa el hook useBondAppContracts
   const [openDialog, setOpenDialog] = useState(false);
   const [editingContract, setEditingContract] = useState<Contract | null>(null);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' | 'warning' });
@@ -82,31 +83,20 @@ const ContractsManagerPageSimple: React.FC = () => {
     };
     
     checkDriveAccess();
-    loadContracts();
+    // Eliminado: ya no se usa loadContracts, los datos se cargan desde Firebase automáticamente
   }, []);
 
-  const loadContracts = () => {
-    try {
-      const savedContracts = localStorage.getItem('bondapp_contracts');
-      if (savedContracts) {
-        setContracts(JSON.parse(savedContracts));
-      }
-    } catch (error) {
-      console.error('Error cargando contratos:', error);
-    }
-  };
+
+  // Usar hook sincronizado con Firebase
+  const { data: contracts, setData: setContracts, loading: loadingContracts } = useBondAppContracts() as { data: Contract[], setData: any, loading: boolean };
 
   const saveContracts = (updatedContracts: Contract[]) => {
     try {
-      // Guardar en localStorage como respaldo
-      localStorage.setItem('bondapp_contracts', JSON.stringify(updatedContracts));
-      
+      setContracts(updatedContracts);
       // Intentar guardar en Google Drive si está disponible
       if (driveStatus.canSave) {
         saveToGoogleDrive(updatedContracts);
       }
-      
-      setContracts(updatedContracts);
     } catch (error) {
       console.error('Error guardando contratos:', error);
       showSnackbar('Error guardando contratos', 'error');

@@ -43,12 +43,7 @@ export class GoogleAuthService {
       this.credentials = await this.loadCredentials();
       
       // Intentar cargar tokens guardados
-      const savedTokens = localStorage.getItem('google_tokens');
-      if (savedTokens) {
-        const tokens = JSON.parse(savedTokens);
-        this.accessToken = tokens.access_token;
-        this.refreshToken = tokens.refresh_token;
-      }
+      // Eliminado: lógica de savedTokens y tokens desde localStorage
 
       this.isInitialized = true;
       console.log('✅ Autenticación de Google inicializada');
@@ -225,8 +220,7 @@ export class GoogleAuthService {
       this.accessToken = tokens.access_token;
       this.refreshToken = tokens.refresh_token || null;
       
-      // Guardar tokens en localStorage
-      localStorage.setItem('google_tokens', JSON.stringify(tokens));
+      // Eliminado: Guardar tokens en localStorage
       
       console.log('✅ Tokens obtenidos y guardados correctamente');
     } catch (error) {
@@ -267,8 +261,7 @@ export class GoogleAuthService {
       this.accessToken = tokens.access_token;
       this.refreshToken = tokens.refresh_token || null;
       
-      // Guardar tokens en localStorage
-      localStorage.setItem('google_tokens', JSON.stringify(tokens));
+      // Eliminado: Guardar tokens en localStorage
       
       console.log('✅ Tokens obtenidos y guardados correctamente');
     } catch (error) {
@@ -306,14 +299,13 @@ export class GoogleAuthService {
 
   // Método de debug para verificar el estado
   getDebugInfo(): any {
-    const savedTokens = localStorage.getItem('google_tokens');
+    // Eliminado: localStorage.getItem('google_tokens');
     return {
       isInitialized: this.isInitialized,
       hasAccessToken: this.accessToken !== null,
       hasRefreshToken: this.refreshToken !== null,
       hasCredentials: this.credentials !== null,
-      savedTokensInStorage: savedTokens !== null,
-      savedTokensPreview: savedTokens ? savedTokens.substring(0, 50) + '...' : null
+        // Eliminado: savedTokensInStorage y savedTokensPreview
     };
   }
 }

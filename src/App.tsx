@@ -149,8 +149,7 @@ const App: React.FC = () => {
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    // Limpiar cualquier dato de sesión que pueda quedar
-    localStorage.removeItem('bondapp_authenticated');
+    // Eliminado: localStorage, todo en Firebase
     logger.info('User logged out - back to login');
   };
 

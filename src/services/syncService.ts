@@ -36,12 +36,11 @@ class SyncService {
   }
 
   private getOrCreateDeviceId(): string {
-    let deviceId = localStorage.getItem('bondapp_device_id');
-    if (!deviceId) {
-      deviceId = `device_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      localStorage.setItem('bondapp_device_id', deviceId);
+    // Generar un ID único para el dispositivo si no existe
+    if (!this.deviceId) {
+      this.deviceId = `device_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     }
-    return deviceId;
+    return this.deviceId;
   }
 
   /**
@@ -50,7 +49,7 @@ class SyncService {
   async saveData(key: string, data: any): Promise<void> {
     try {
       // Guardar localmente
-      localStorage.setItem(key, JSON.stringify(data));
+      // Eliminado: localStorage.setItem(key, ...)
 
       // Sincronizar con Firebase
       const docRef = doc(db, 'bondapp_sync', `${this.userId}_${key}`);
@@ -70,7 +69,7 @@ class SyncService {
   }
 
   /**
-   * Cargar datos priorizando Firebase sobre localStorage
+   * Cargar datos solo desde Firebase
    */
   async loadData(key: string): Promise<any> {
     try {
@@ -80,41 +79,12 @@ class SyncService {
 
       if (docSnap.exists()) {
         const firebaseData = docSnap.data() as SyncData;
-        const localData = localStorage.getItem(key);
-
-        if (localData) {
-          const localTimestamp = JSON.parse(localData)?.lastModified || 0;
-          const firebaseTimestamp = firebaseData.timestamp?.toMillis() || 0;
-
-          // Si Firebase tiene datos más recientes
-          if (firebaseTimestamp > localTimestamp) {
-            console.log(`🔄 Actualizando ${key} desde Firebase`);
-            localStorage.setItem(key, JSON.stringify({
-              ...firebaseData.data,
-              lastModified: firebaseTimestamp
-            }));
-            return firebaseData.data;
-          }
-        } else {
-          // No hay datos locales, usar Firebase
-          console.log(`📥 Cargando ${key} desde Firebase`);
-          localStorage.setItem(key, JSON.stringify({
-            ...firebaseData.data,
-            lastModified: firebaseData.timestamp?.toMillis() || Date.now()
-          }));
-          return firebaseData.data;
-        }
+        return firebaseData.data;
       }
-
-      // Fallback a localStorage
-      const localData = localStorage.getItem(key);
-      return localData ? JSON.parse(localData) : null;
-
+      return null;
     } catch (error) {
       console.warn(`⚠️ Error cargando ${key} desde Firebase:`, error);
-      // Fallback a localStorage
-      const localData = localStorage.getItem(key);
-      return localData ? JSON.parse(localData) : null;
+      return null;
     }
   }
 
@@ -122,35 +92,17 @@ class SyncService {
    * Escuchar cambios en tiempo real
    */
   listenToChanges(key: string, callback: (data: any) => void): void {
-    try {
-      const docRef = doc(db, 'bondapp_sync', `${this.userId}_${key}`);
-      
-      const unsubscribe = onSnapshot(docRef, (doc) => {
-        if (doc.exists()) {
-          const firebaseData = doc.data() as SyncData;
-          
-          // Solo actualizar si no fue este dispositivo el que hizo el cambio
-          if (firebaseData.deviceId !== this.deviceId) {
-            console.log(`🔄 Cambio remoto detectado en ${key}`);
-            
-            // Actualizar localStorage
-            localStorage.setItem(key, JSON.stringify({
-              ...firebaseData.data,
-              lastModified: firebaseData.timestamp?.toMillis() || Date.now()
-            }));
-            
-            // Notificar al callback
-            callback(firebaseData.data);
-          }
+    const docRef = doc(db, 'bondapp_sync', `${this.userId}_${key}`);
+    const unsubscribe = onSnapshot(docRef, (doc) => {
+      if (doc.exists()) {
+        const firebaseData = doc.data() as SyncData;
+        if (firebaseData.deviceId !== this.deviceId) {
+          console.log(`🔄 Cambio remoto detectado en ${key}`);
+          callback(firebaseData.data);
         }
-      });
-
-      // Guardar el listener para poder limpiarlo después
-      this.listeners.set(key, unsubscribe);
-
-    } catch (error) {
-      console.warn(`⚠️ Error configurando listener para ${key}:`, error);
-    }
+      }
+    });
+    this.listeners.set(key, unsubscribe);
   }
 
   /**
@@ -213,35 +165,7 @@ class SyncService {
   /**
    * Forzar push de datos locales a Firebase
    */
-  async pushAllLocalData(): Promise<void> {
-    const keys = [
-      'bondapp-performances',
-      'bondapp-components', 
-      'bondapp-contracts',
-      'bondapp-finances',
-      'bondapp-inventory',
-      'bondapp-tasks',
-      'bondapp-scores',
-      'bondapp-instruments'
-    ];
-
-    console.log('📤 Enviando todos los datos locales a Firebase...');
-
-    for (const key of keys) {
-      const localData = localStorage.getItem(key);
-      if (localData) {
-        try {
-          const data = JSON.parse(localData);
-          await this.saveData(key, data);
-          console.log(`✅ ${key}: enviado`);
-        } catch (error) {
-          console.warn(`⚠️ Error enviando ${key}:`, error);
-        }
-      }
-    }
-
-    console.log('✅ Envío completo terminado');
-  }
+  // pushAllLocalData eliminado: ya no hay datos locales, solo Firebase
 }
 
 // Instancia singleton
@@ -256,6 +180,6 @@ export const useBondAppSync = () => {
     stopListening: syncService.stopListening.bind(syncService),
     syncAllData: syncService.syncAllData.bind(syncService),
     getSyncStatus: syncService.getSyncStatus.bind(syncService),
-    pushAllLocalData: syncService.pushAllLocalData.bind(syncService),
+    // pushAllLocalData eliminado: ya no existe, solo Firebase
   };
 };

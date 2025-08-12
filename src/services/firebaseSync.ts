@@ -20,7 +20,7 @@ interface SyncData {
 }
 
 export class FirebaseSyncService {
-  private deviceId: string;
+  private deviceId: string | null;
   private listeners: Map<string, () => void> = new Map();
 
   constructor() {
@@ -28,13 +28,10 @@ export class FirebaseSyncService {
     this.deviceId = this.getOrCreateDeviceId();
   }
 
-  private getOrCreateDeviceId(): string {
-    let deviceId = localStorage.getItem('bondapp_device_id');
-    if (!deviceId) {
-      deviceId = `device_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      localStorage.setItem('bondapp_device_id', deviceId);
-    }
-    return deviceId;
+  private getOrCreateDeviceId(): string | null {
+    // Eliminado: localStorage.getItem('bondapp_device_id');
+    // Eliminado: lógica de deviceId y localStorage
+    return null;
   }
 
   // Sincronizar datos con Firebase
@@ -51,7 +48,7 @@ export class FirebaseSyncService {
         id: 'main',
         data: localData,
         lastModified: serverTimestamp() as Timestamp,
-        deviceId: this.deviceId
+        deviceId: this.deviceId || ''
       };
 
       batch.set(mainDocRef, syncData);
@@ -171,9 +168,8 @@ export class FirebaseSyncService {
         const data = await this.getCollection(collectionName);
         allData[collectionName] = data;
         
-        // Actualizar localStorage con datos de Firebase
-        const localKey = `bondapp-${collectionName}`;
-        localStorage.setItem(localKey, JSON.stringify(data));
+        // Eliminado: Actualizar localStorage con datos de Firebase
+        // Eliminado: localStorage.setItem(localKey, JSON.stringify(data));
       } catch (error) {
         console.error(`❌ Error cargando ${collectionName}:`, error);
         allData[collectionName] = [];

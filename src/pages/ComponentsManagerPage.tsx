@@ -50,10 +50,10 @@ import {
   Remove as RemoveIcon,
 } from '@mui/icons-material';
 
-// Importar los datos JSON
-import componentsData from '../data/components.json';
+
 import voicesData from '../data/voices.json';
 import instrumentsData from '../data/instruments.json';
+import { useBondAppComponents, useBondAppInventory } from '../hooks/useBondAppStorage';
 
 interface ComponentMember {
   id: string;
@@ -120,40 +120,11 @@ interface InventoryItem {
 }
 
 const ComponentsManagerPage: React.FC = () => {
-  // Función para cargar componentes (con datos actualizados desde localStorage si existen)
-  const loadComponents = (): ComponentMember[] => {
-    try {
-      const savedComponents = localStorage.getItem('bondapp-components');
-      if (savedComponents) {
-        const parsedComponents = JSON.parse(savedComponents);
-        // Asegurar que todos los componentes tengan el campo assignedInventory
-        const componentsWithInventory = parsedComponents.map((comp: ComponentMember) => ({
-          ...comp,
-          assignedInventory: comp.assignedInventory || []
-        }));
-        console.log('Componentes cargados desde localStorage (con datos de asistencia actualizados)');
-        return componentsWithInventory;
-      }
-      // Cargar desde datos base y añadir campo assignedInventory
-      const baseComponents = componentsData.map((comp: any) => ({
-        ...comp,
-        assignedInventory: []
-      })) as ComponentMember[];
-      console.log('Componentes cargados desde base de datos original');
-      return baseComponents;
-    } catch (error) {
-      console.error('Error al cargar componentes:', error);
-      return componentsData.map((comp: any) => ({
-        ...comp,
-        assignedInventory: []
-      })) as ComponentMember[];
-    }
-  };
-
-  const [components, setComponents] = useState<ComponentMember[]>(loadComponents());
+  // Usar hooks sincronizados con Firebase
+  const { data: components, setData: setComponents, loading: loadingComponents } = useBondAppComponents() as { data: ComponentMember[], setData: any, loading: boolean };
+  const { data: inventory, setData: setInventory, loading: loadingInventory } = useBondAppInventory() as { data: InventoryItem[], setData: any, loading: boolean };
   const [voices] = useState<Voice[]>(voicesData as Voice[]);
   const [instruments] = useState<Instrument[]>(instrumentsData as Instrument[]);
-  const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [success, setSuccess] = useState<string>('');
   const [error, setError] = useState<string>('');
 
@@ -166,33 +137,13 @@ const ComponentsManagerPage: React.FC = () => {
   const [selectedMember, setSelectedMember] = useState<ComponentMember | null>(null);
   const [availableInventory, setAvailableInventory] = useState<InventoryItem[]>([]);
 
-  // Sincronizar con localStorage cuando cambien los componentes
+  // Actualizar availableInventory cuando inventory cambie
   useEffect(() => {
-    if (components.length > 0) {
-      localStorage.setItem('bondapp-components', JSON.stringify(components));
+    if (inventory && inventory.length > 0) {
+      const available = inventory.filter((item: InventoryItem) => item.status === 'available');
+      setAvailableInventory(available);
     }
-  }, [components]);
-
-  // Cargar inventario desde localStorage
-  useEffect(() => {
-    const loadInventory = () => {
-      try {
-        const savedInventory = localStorage.getItem('bondapp-inventory');
-        if (savedInventory) {
-          const parsedInventory = JSON.parse(savedInventory);
-          setInventory(parsedInventory);
-          
-          // Filtrar items disponibles para asignación
-          const available = parsedInventory.filter((item: InventoryItem) => item.status === 'available');
-          setAvailableInventory(available);
-        }
-      } catch (error) {
-        console.error('Error al cargar inventario:', error);
-      }
-    };
-    
-    loadInventory();
-  }, []);
+  }, [inventory]);
 
   // Función para sincronizar estados entre inventario y componentes
   const syncInventoryComponentsState = () => {
@@ -253,8 +204,7 @@ const ComponentsManagerPage: React.FC = () => {
     if (hasChanges) {
       setInventory(updatedInventory);
       setComponents(updatedComponents);
-      localStorage.setItem('bondapp-inventory', JSON.stringify(updatedInventory));
-      localStorage.setItem('bondapp-components', JSON.stringify(updatedComponents));
+      // Ya no se usa localStorage, todo se sincroniza con Firebase
       console.log('Estados sincronizados entre inventario y componentes');
     }
   };
@@ -356,7 +306,6 @@ const ComponentsManagerPage: React.FC = () => {
     });
 
     setInventory(updatedInventory);
-    localStorage.setItem('bondapp-inventory', JSON.stringify(updatedInventory));
 
     // Actualizar el componente
     const updatedComponents = components.map(comp => {
@@ -410,7 +359,6 @@ const ComponentsManagerPage: React.FC = () => {
     });
 
     setInventory(updatedInventory);
-    localStorage.setItem('bondapp-inventory', JSON.stringify(updatedInventory));
 
     // Actualizar el componente
     const updatedComponents = components.map(comp => {
