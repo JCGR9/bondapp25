@@ -384,8 +384,8 @@ const DashboardRealData: React.FC<DashboardProps> = ({ onNavigate }) => {
       {/* Prueba de Firebase */}
       <FirebaseTest />
 
-      {/* Sincronización Firebase - Temporalmente desactivado */}
-      {/* <FirebaseSyncManager /> */}
+      {/* Sincronización Firebase */}
+      <FirebaseSyncManager />
 
       {/* KPIs principales */}
       <Box sx={{ mb: 4 }}>
