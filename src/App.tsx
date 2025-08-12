@@ -136,28 +136,22 @@ const App: React.FC = () => {
       logger.info(`Ejecutando en modo: ${ENV.isProduction ? 'Producción' : 'Desarrollo'}`);
     }
 
-    // Verificar si hay sesión guardada al cargar
-    const savedAuth = localStorage.getItem('bondapp_authenticated');
-    logger.debug('Checking saved auth:', savedAuth);
-    if (savedAuth === 'true') {
-      logger.info('Found saved auth, setting authenticated to true');
-      setIsAuthenticated(true);
-    } else {
-      logger.debug('No saved auth found');
-    }
+    // SIEMPRE empezar en login - no verificar sesión guardada
+    logger.info('Aplicación iniciada - mostrando login');
   }, []);
 
   const handleLogin = () => {
     logger.info('Handling login');
     setIsAuthenticated(true);
-    localStorage.setItem('bondapp_authenticated', 'true');
-    logger.info('Login successful, saved to localStorage');
+    // No guardar en localStorage - solo sesión temporal
+    logger.info('Login successful - session temporal');
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
+    // Limpiar cualquier dato de sesión que pueda quedar
     localStorage.removeItem('bondapp_authenticated');
-    logger.info('User logged out');
+    logger.info('User logged out - back to login');
   };
 
   const handleDrawerToggle = () => {

@@ -27,6 +27,7 @@ import {
 
 import { initializeApp } from '../utils/autoSetup';
 import { FirebaseSyncManager } from '../components/FirebaseSyncManager';
+import FirebaseTest from '../components/FirebaseTest';
 
 interface DashboardProps {
   onNavigate?: (page: string) => void;
@@ -380,8 +381,11 @@ const DashboardRealData: React.FC<DashboardProps> = ({ onNavigate }) => {
         📊 Dashboard - Estadísticas Reales BondApp
       </Typography>
 
-      {/* Sincronización Firebase */}
-      <FirebaseSyncManager />
+      {/* Prueba de Firebase */}
+      <FirebaseTest />
+
+      {/* Sincronización Firebase - Temporalmente desactivado */}
+      {/* <FirebaseSyncManager /> */}
 
       {/* KPIs principales */}
       <Box sx={{ mb: 4 }}>
