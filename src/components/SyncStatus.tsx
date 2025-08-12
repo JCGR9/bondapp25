@@ -32,6 +32,34 @@ interface SyncStatusProps {
 }
 
 export const SyncStatus: React.FC<SyncStatusProps> = ({ compact = false }) => {
+  const handleSync = async () => {
+    if (!isOnline) {
+      setSyncMessage('Sin conexión a internet');
+      setShowMessage(true);
+      setTimeout(() => setShowMessage(false), 3000);
+      return;
+    }
+
+    setIsSyncing(true);
+    setSyncMessage('Sincronizando...');
+    setShowMessage(true);
+
+    try {
+      await syncAllData();
+      setLastSync(new Date());
+      setSyncMessage('✅ Sincronización completada');
+      setTimeout(() => {
+        setShowMessage(false);
+        window.location.reload();
+      }, 2000);
+    } catch (error) {
+      console.error('Error during sync:', error);
+      setSyncMessage('❌ Error en la sincronización');
+      setTimeout(() => setShowMessage(false), 3000);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSync, setLastSync] = useState<Date | null>(null);
@@ -39,7 +67,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({ compact = false }) => {
   const [syncMessage, setSyncMessage] = useState<string>('');
   const [showMessage, setShowMessage] = useState(false);
 
-  const { syncAllData, getSyncStatus, pushAllLocalData } = useBondAppSync();
+  const { syncAllData, getSyncStatus } = useBondAppSync();
 
   useEffect(() => {
     // Monitorear estado de conexión
@@ -68,62 +96,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({ compact = false }) => {
     }
   };
 
-  const handleSync = async () => {
-    if (!isOnline) {
-      setSyncMessage('Sin conexión a internet');
-      setShowMessage(true);
-      setTimeout(() => setShowMessage(false), 3000);
-      return;
-    }
-
-    setIsSyncing(true);
-    setSyncMessage('Sincronizando...');
-    setShowMessage(true);
-
-    try {
-      await syncAllData();
-      setLastSync(new Date());
-      setSyncMessage('✅ Sincronización completada');
-      
-      setTimeout(() => {
-        setShowMessage(false);
-        // Recargar la página para mostrar los datos actualizados
-        window.location.reload();
-      }, 2000);
-    } catch (error) {
-      console.error('Error during sync:', error);
-      setSyncMessage('❌ Error en la sincronización');
-      setTimeout(() => setShowMessage(false), 3000);
-    } finally {
-      setIsSyncing(false);
-    }
-  };
-
-  const handlePushData = async () => {
-    if (!isOnline) {
-      setSyncMessage('Sin conexión a internet');
-      setShowMessage(true);
-      setTimeout(() => setShowMessage(false), 3000);
-      return;
-    }
-
-    setIsSyncing(true);
-    setSyncMessage('Enviando datos locales...');
-    setShowMessage(true);
-
-    try {
-      await pushAllLocalData();
-      setLastSync(new Date());
-      setSyncMessage('✅ Datos enviados correctamente');
-      setTimeout(() => setShowMessage(false), 3000);
-    } catch (error) {
-      console.error('Error pushing data:', error);
-      setSyncMessage('❌ Error enviando datos');
-      setTimeout(() => setShowMessage(false), 3000);
-    } finally {
-      setIsSyncing(false);
-    }
-  };
+  // handlePushData eliminado: ya no hay datos locales, solo Firebase
 
   const getDeviceIcon = () => {
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -233,15 +206,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({ compact = false }) => {
             {isSyncing ? 'Sincronizando...' : 'Sincronizar Todo'}
           </Button>
 
-          <Button
-            variant="outlined"
-            startIcon={<RefreshIcon />}
-            onClick={handlePushData}
-            disabled={isSyncing || !isOnline}
-            size="small"
-          >
-            Enviar Cambios
-          </Button>
+
 
           <Button
             variant="text"
